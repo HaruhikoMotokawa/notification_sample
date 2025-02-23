@@ -7,14 +7,14 @@ plugins {
 
 android {
     namespace = "com.base.sample.app.base_sample"
-    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-    // INFO: permission_handler が34以上を要求するので、compileSdkVersion を 34 に変更
-    compileSdkVersion 34
+    compileSdkVersion flutter.compileSdkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        // INFO: local_notificationsの設定
+        coreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -29,6 +29,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // INFO: local_notificationsの設定
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -41,4 +43,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // INFO: Flutterの3.27.1にupdateする際に、行ったGradlenのUpdateでlocal_notificationがエラーになるので、追加
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }
