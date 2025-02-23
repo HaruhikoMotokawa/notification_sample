@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:notification_sample/data/repositories/permission_handler/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -10,9 +12,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text('Hello World!'),
+        child: Consumer(
+          builder: (context, ref, child) {
+            return ElevatedButton(
+              onPressed: () {
+                ref.read(permissionHandlerRepositoryProvider).goAppSettings();
+              },
+              child: const Text('Button'),
+            );
+          },
+        ),
       ),
     );
   }

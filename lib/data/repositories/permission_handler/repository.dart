@@ -4,7 +4,11 @@ import 'package:notification_sample/core/log/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 abstract interface class PermissionHandlerRepositoryBase {
+  /// 権限をリクエストする
   Future<void> requestPermission();
+
+  /// デバイスの設定画面に遷移する
+  Future<void> goAppSettings();
 }
 
 class PermissionHandlerRepository implements PermissionHandlerRepositoryBase {
@@ -25,4 +29,7 @@ class PermissionHandlerRepository implements PermissionHandlerRepositoryBase {
     ].request();
     logger.d('Permission status: $status');
   }
+
+  @override
+  Future<void> goAppSettings() => openAppSettings();
 }
