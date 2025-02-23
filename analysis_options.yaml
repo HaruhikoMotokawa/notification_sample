@@ -23,9 +23,9 @@ analyzer:
 
   errors:
     # TODOコメントをエラーとして扱わないようにします。
-    TODO: ignore
+    todo: ignore
     # HACKコメントをエラーとして扱わないようにします。
-    HACK: ignore
+    hack: ignore
     # switch文でdefaultケースがなくてもエラーとしないようにします。
     no_default_cases: ignore
     # ignoreコメントになぜ無視するのかのコメントをつけなくてもエラーとしないようにします。
