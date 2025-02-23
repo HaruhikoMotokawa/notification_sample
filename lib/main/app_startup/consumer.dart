@@ -1,6 +1,6 @@
-import 'package:base_sample/main/app_startup/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:notification_sample/main/app_startup/provider.dart';
 
 /// 初期化を待つためのウィジェット
 class AppStartupConsumer extends ConsumerWidget {

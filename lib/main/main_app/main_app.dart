@@ -1,9 +1,9 @@
-import 'package:base_sample/core/constants/constants.dart';
-import 'package:base_sample/core/router/router.dart';
-import 'package:base_sample/presentations/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:notification_sample/core/constants/constants.dart';
+import 'package:notification_sample/core/router/router.dart';
+import 'package:notification_sample/presentations/theme/theme.dart';
 
 /// アプリの基盤となるウィジェット
 class MainApp extends ConsumerWidget {

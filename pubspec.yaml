@@ -1,5 +1,5 @@
 # INFO: VSCodeの置換を使って ./lib 内の base_sample のimportを一括変更し、ここの name も変更する
-name: base_sample
+name: notification_sample
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0
