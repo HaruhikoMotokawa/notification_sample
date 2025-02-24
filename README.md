@@ -1,11 +1,12 @@
-# base_sample
-
-<img src="thumbnail/base_sample_thumbnail.png" width="300">
+# Notification Sample
 
 > [!NOTE]
 >  このプロジェクトのFlutterSDKは **3.29.0** です。
 ## 概要
-このプロジェクトはサンプルプロジェクトを作るにあたっての雛形となるプロジェクトです。
+通知に関する実装のサンプルプロジェクトです。
+
+
+なおこのプロジェクトはサンプルプロジェクトを作るにあたっての雛形を元に作成しています。
 
 この雛形プロジェクトからサンプル用のプロジェクトを構築する流れを以下の記事に記しています。
 [【Flutter】学習・開発効率UP！雛形からサンプル用プロジェクト構築ガイド](https://zenn.dev/harx/articles/23cac8d1e15d35)
@@ -25,19 +26,6 @@
 このプロジェクトにはfvmを使用してFlutterのバージョン管理をしています。
 
 [fvm](https://pub.dev/packages/fvm)
-
-## pubspec.yaml
-以下はすでにインストール済みです。不要であれば削除してください。
-  - riverpodとhooks関連
-  - freezedとjson関連
-  - logger
-  - gap
-  - very_good_analysis
-  - derry
-  - rename_app
-  - utility_widgets
-  - go_router
-またderryで使うスクリプトも登録済みです。
 
 ## analysis_options.yaml
 

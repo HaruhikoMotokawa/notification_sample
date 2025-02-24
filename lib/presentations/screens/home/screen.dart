@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:notification_sample/data/repositories/local_notification/provider.dart';
 import 'package:notification_sample/data/repositories/permission_handler/provider.dart';
+import 'package:notification_sample/presentations/screens/cat/screen.dart';
+import 'package:notification_sample/presentations/screens/dog/screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({
@@ -41,15 +44,37 @@ class HomeScreen extends ConsumerWidget {
                     .read(localNotificationsRepositoryProvider)
                     .zonedSchedule(
                       dateTime: setDate,
+                    );
+              },
+              child: const Text('今から5秒後に通知を流す'
+                  '\nAndroidはSCHEDULE_EXACT_ALARM が不要'),
+            ),
+            const Divider(),
+            ElevatedButton(
+              onPressed: () async {
+                final setDate = DateTime.now().add(const Duration(seconds: 5));
+                await ref
+                    .read(localNotificationsRepositoryProvider)
+                    .testZonedSchedule(
+                      dateTime: setDate,
                       androidScheduleMode: AndroidScheduleMode.alarmClock,
-                      // INFO: 以下の2つでも必要
-                      // androidScheduleMode: AndroidScheduleMode.exact,
-                      // androidScheduleMode:
-                      //     AndroidScheduleMode.exactAllowWhileIdle,
                     );
               },
               child: const Text('今から5秒後に通知を飛ばす'
                   '\nAndroidはSCHEDULE_EXACT_ALARM が必要'),
+            ),
+            const Divider(),
+            ElevatedButton(
+              onPressed: () async {
+                final setDate = DateTime.now().add(const Duration(seconds: 5));
+                await ref
+                    .read(localNotificationsRepositoryProvider)
+                    .zonedSchedule(
+                      dateTime: setDate,
+                      payload: DogScreen.path,
+                    );
+              },
+              child: const Text('DogScreenへ遷移する通知を5秒後に飛ばします'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -58,11 +83,19 @@ class HomeScreen extends ConsumerWidget {
                     .read(localNotificationsRepositoryProvider)
                     .zonedSchedule(
                       dateTime: setDate,
-                      androidScheduleMode: AndroidScheduleMode.inexact,
+                      payload: CatScreen.path,
                     );
               },
-              child: const Text('今から5秒後に通知を流す'
-                  '\nAndroidはSCHEDULE_EXACT_ALARM が不要'),
+              child: const Text('CatScreenへ遷移する通知を5秒後に飛ばします'),
+            ),
+            const Divider(),
+            ElevatedButton(
+              onPressed: () => context.go(DogScreen.path),
+              child: const Text('DogScreenへ遷移'),
+            ),
+            ElevatedButton(
+              onPressed: () => context.go(CatScreen.path),
+              child: const Text('CatScreenへ遷移'),
             ),
           ],
         ),
