@@ -1,9 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 <!-- プッシュ通知の権限 -->
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+<!-- 端末が再起動されたことをアプリに通知する権限　再起動後にスケジューリングされた通知を再設定 -->
 <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-<!-- 厳密なアラームの使用 スケジューリングされた通知のため-->
-<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+<!-- 厳密なアラームの使用する場合はここのコメントアウトを外す -->
+<!-- <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/> -->
     <application android:label="Notification Sample" android:name="${applicationName}" android:icon="@mipmap/ic_launcher">
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:taskAffinity="" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
             <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme"/>
@@ -13,12 +14,7 @@
             </intent-filter>
         </activity>
         <meta-data android:name="flutterEmbedding" android:value="2"/>
-        <!-- default_notification_channel_idを追記 -->
-        <meta-data
-        android:name="com.google.firebase.messaging.default_notification_channel_id"
-        android:value="default_notification_channel" />
-        <!-- default_notification_channel_idを追記 -->
-        <!-- flutter_local_notificationsのスケジューリングされた通知の設定 -->
+        <!-- flutter_local_notificationsのスケジューリングされた通知の設定 ここから-->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
         <intent-filter>
@@ -28,7 +24,7 @@
             <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
         </intent-filter>
         </receiver>
-        <!-- flutter_local_notificationsのスケジューリングされた通知の設定 -->
+        <!-- flutter_local_notificationsのスケジューリングされた通知の設定 ここまで-->
     </application>
     <queries>
         <intent>

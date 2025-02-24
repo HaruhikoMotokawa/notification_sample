@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:notification_sample/core/log/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,10 +21,10 @@ class PermissionHandlerRepository implements PermissionHandlerRepositoryBase {
       Permission.notification,
 
       /// Androidの場合のみ
-      if (defaultTargetPlatform == TargetPlatform.android) ...[
-        // 厳密なアラームの設定権限 主にプッシュ通知のスケジュールで使用
-        Permission.scheduleExactAlarm,
-      ],
+      // if (defaultTargetPlatform == TargetPlatform.android) ...[
+      //   // 厳密なアラームの設定権限 主にプッシュ通知のスケジュールで使用
+      //   Permission.scheduleExactAlarm,
+      // ],
     ].request();
     logger.d('Permission status: $status');
   }

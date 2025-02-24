@@ -15,7 +15,10 @@ abstract interface class LocalNotificationsRepositoryBase {
   /// 通知スケジュールに登録
   ///
   /// [dateTime] 指定した日時で通知する
-  Future<void> zonedSchedule({required DateTime dateTime});
+  Future<void> zonedSchedule({
+    required DateTime dateTime,
+    AndroidScheduleMode androidScheduleMode,
+  });
 
   Future<void> showNotification();
 }
@@ -32,24 +35,19 @@ class LocalNotificationsRepository implements LocalNotificationsRepositoryBase {
   static const _channelDescription = 'Notification Sampleからのプッシュ通知';
   static const _androidAppIcon = '@mipmap/ic_launcher';
 
+  static const _androidNotificationDetails = AndroidNotificationDetails(
+    _channelId,
+    _channelName,
+    channelDescription: _channelDescription,
+    importance: Importance.max,
+    priority: Priority.high,
+    ticker: 'ticker',
+  );
+
   @override
   Future<void> init() async {
     // タイムゾーンの初期化
     tz.initializeTimeZones();
-
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      // Androidのの通知設定
-      final androidImplementation =
-          localNotifications.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
-      await androidImplementation?.createNotificationChannel(
-        const AndroidNotificationChannel(
-          _channelId,
-          _channelName,
-          importance: Importance.high,
-        ),
-      );
-    }
 
     // ローカルから表示したプッシュ通知をタップした場合の処理を設定
     await localNotifications.initialize(
@@ -57,48 +55,45 @@ class LocalNotificationsRepository implements LocalNotificationsRepositoryBase {
         android: AndroidInitializationSettings(_androidAppIcon),
         iOS: DarwinInitializationSettings(),
       ),
-      // プッシュ通知をタップした場合の処理を設定
-      onDidReceiveBackgroundNotificationResponse: _handleNotificationTap,
-      // ローカルから表示したプッシュ通知をタップした場合の処理を設定
-      onDidReceiveNotificationResponse: _handleNotificationTap,
+      // // プッシュ通知をタップした場合の処理を設定
+      // onDidReceiveBackgroundNotificationResponse: _handleNotificationTap,
+      // // ローカルから表示したプッシュ通知をタップした場合の処理を設定
+      // onDidReceiveNotificationResponse: _handleNotificationTap,
     );
   }
 
   /// プッシュ通知をタップした際の処理
   ///
   /// 通知をタップした際にアプリを起動し、ペイロードに設定されたパスに遷移する
-  static void _handleNotificationTap(NotificationResponse response) {
-    logger.d(response);
-  }
+  // static void _handleNotificationTap(NotificationResponse response) {}
 
   @override
-  Future<void> zonedSchedule({required DateTime dateTime}) async {
+  Future<void> zonedSchedule({
+    required DateTime dateTime,
+    AndroidScheduleMode androidScheduleMode = AndroidScheduleMode.inexact,
+  }) async {
     // ハッシュ化したものを通知IDに使用
     final zonedScheduleId = _hashTo32Bit(dateTime.toString());
 
-    // 通知スケジュールに登録
-    await localNotifications.zonedSchedule(
-      zonedScheduleId,
-      'アラーム',
-      '$dateTimeになりました',
-      // 予約作品の閲覧可能通知は、作品の閲覧可能日時に通知する
-      tz.TZDateTime.from(dateTime, tz.local),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: _channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-      ),
-      payload: 'payload',
-      // 正確な時間で通知する
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      // 壁紙時計の時間 == ユーザーのローカルタイムゾーン
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.wallClockTime,
-    );
+    try {
+      // 通知スケジュールに登録
+      await localNotifications.zonedSchedule(
+        zonedScheduleId,
+        'アラーム',
+        '$dateTimeになりました',
+        // 予約作品の閲覧可能通知は、作品の閲覧可能日時に通知する
+        tz.TZDateTime.from(dateTime, tz.local),
+        const NotificationDetails(android: _androidNotificationDetails),
+        payload: 'payload',
+        // どのくらい正確に通知するかの設定
+        androidScheduleMode: androidScheduleMode,
+        // 壁紙時計の時間 == ユーザーのローカルタイムゾーン
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.wallClockTime,
+      );
+    } on Exception catch (e) {
+      logger.w('Failed to schedule notification: $e');
+    }
   }
 
   /// SHA-256を使って文字列を32ビットのハッシュに変換
@@ -118,23 +113,11 @@ class LocalNotificationsRepository implements LocalNotificationsRepositoryBase {
   }
 
   @override
-  Future<void> showNotification() async {
-    const androidNotificationDetails = AndroidNotificationDetails(
-      _channelId,
-      _channelName,
-      channelDescription: _channelDescription,
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
-    const notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
-    await localNotifications.show(
-      0,
-      'plain title',
-      'plain body',
-      notificationDetails,
-      payload: 'item x',
-    );
-  }
+  Future<void> showNotification() => localNotifications.show(
+        0,
+        'plain title',
+        'plain body',
+        const NotificationDetails(android: _androidNotificationDetails),
+        payload: 'item x',
+      );
 }
