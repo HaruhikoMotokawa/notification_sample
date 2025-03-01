@@ -53,6 +53,9 @@ firebase_app_id_file.json
 # iosのbuildの成果物
 ios/output/**
 
+# Ignore Android NDK build cache
+android/app/.cxx
+
 # fastlaneのレポート
 ios/fastlane/report.xml
 android/fastlane/report.xml
