@@ -25,7 +25,7 @@ class HomeScreen extends ConsumerWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                ref.read(permissionHandlerRepositoryProvider).goAppSettings();
+                ref.read(appSettingsRepositoryProvider).openAppSettings();
               },
               child: const Text('アプリの設定画面へ遷移'),
             ),
