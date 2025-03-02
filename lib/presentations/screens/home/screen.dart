@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:notification_sample/data/repositories/app_settings/provider.dart';
 import 'package:notification_sample/data/repositories/local_notification/provider.dart';
-import 'package:notification_sample/data/repositories/permission_handler/provider.dart';
 import 'package:notification_sample/presentations/screens/cat/screen.dart';
 import 'package:notification_sample/presentations/screens/dog/screen.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends HookConsumerWidget {
   const HomeScreen({
     super.key,
   });
@@ -17,6 +18,23 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // アプリ起動時に通知からの遷移パスを取得
+    final location = ref.watch(notificationLocationProvider);
+
+    useEffect(
+      () {
+        // アプリ起動時に通知からの遷移パスがあれば遷移する
+        if (location != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.go(location);
+            // 通知からの遷移パスをクリア
+            ref.read(notificationLocationProvider.notifier).path = null;
+          });
+        }
+        return null;
+      },
+      [],
+    );
     return Scaffold(
       body: Center(
         child: Column(
